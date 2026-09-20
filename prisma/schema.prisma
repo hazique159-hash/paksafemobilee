@@ -1,0 +1,94 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  RETAILER
+  ADMIN
+}
+
+enum PhoneStatus {
+  AVAILABLE
+  SOLD
+}
+
+model User {
+  id              String   @id @default(cuid())
+  name            String
+  email           String   @unique
+  phone           String
+  password        String
+  role            Role     @default(USER)
+  isEmailVerified Boolean  @default(false)
+  isApproved      Boolean  @default(false)
+  isActive        Boolean  @default(true)
+
+  // Retailer-specific fields
+  shopName    String?
+  shopAddress String?
+  city        String?
+  shopImage   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  stolenIMEIs  StolenIMEI[]
+  phoneListings PhoneListing[]
+
+  @@map("users")
+}
+
+model OtpVerification {
+  id        String   @id @default(cuid())
+  email     String
+  otp       String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@map("otp_verifications")
+}
+
+model StolenIMEI {
+  id            String   @id @default(cuid())
+  imei          String   @unique
+  brand         String
+  model         String
+  description   String?
+  reporterPhone String
+  reporterEmail String
+  reportDate    DateTime @default(now())
+
+  reportedById String
+  reportedBy   User   @relation(fields: [reportedById], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("stolen_imeis")
+}
+
+model PhoneListing {
+  id         String      @id @default(cuid())
+  brand      String
+  model      String
+  price      Float
+  color      String
+  condition  String
+  ramStorage String
+  image      String?
+  status     PhoneStatus @default(AVAILABLE)
+
+  retailerId String
+  retailer   User   @relation(fields: [retailerId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("phone_listings")
+}

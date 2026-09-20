@@ -1,5 +1,7 @@
 import { notFound } from "next/navigation";
 
+export const dynamic = "force-dynamic";
+
 async function getRetailer(id: string) {
   const { prisma } = await import("@/lib/prisma");
   

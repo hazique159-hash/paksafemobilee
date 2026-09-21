@@ -1,8 +1,10 @@
 import type { NextAuthConfig } from "next-auth";
 
 export const authConfig: NextAuthConfig = {
+  trustHost: true,
   pages: {
     signIn: "/login",
+    error: "/login",
   },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
@@ -76,5 +78,5 @@ export const authConfig: NextAuthConfig = {
   session: {
     strategy: "jwt",
   },
-  secret: process.env.AUTH_SECRET,
+  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || "pakistan_safe_mobiles_secret_key_2024",
 };

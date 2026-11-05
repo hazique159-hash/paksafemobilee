@@ -131,7 +131,7 @@ function VerifyOtpContent() {
           </div>
         )}
 
-        <div className="flex justify-between gap-2 mb-8">
+        <div className="flex gap-1.5 sm:gap-2 mb-8">
           {otp.map((digit, index) => (
             <input
               key={index}
@@ -142,7 +142,7 @@ function VerifyOtpContent() {
               value={digit}
               onChange={(e) => handleChange(index, e.target.value)}
               onKeyDown={(e) => handleKeyDown(index, e)}
-              className="w-12 h-14 text-center text-xl font-bold rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#0d9488] focus:border-[#0d9488] outline-none transition-all duration-200"
+              className="flex-1 min-w-0 w-full h-12 sm:h-14 text-center text-xl font-bold rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#0d9488] focus:border-[#0d9488] outline-none transition-all duration-200"
               disabled={loading || !!successMsg}
             />
           ))}

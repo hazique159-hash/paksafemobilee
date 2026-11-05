@@ -76,55 +76,6 @@ export default function RetailerDashboard() {
         <p className="text-gray-500 mt-1">Here is an overview of your shop</p>
       </div>
 
-      {/* Announcements Feed / Alert Banner for Retailers */}
-      {announcements.length > 0 && (
-        <div className="bg-white rounded-2xl shadow-sm border border-indigo-100 p-5 space-y-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="flex h-2.5 w-2.5 relative">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#0d9488]"></span>
-              </span>
-              <h2 className="text-base font-bold text-[#1e1b4b]">Admin Announcements & Bulletins</h2>
-            </div>
-            <Link href="/announcements" className="text-xs font-semibold text-[#0d9488] hover:underline">
-              View All ({announcements.length})
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            {announcements.map((item) => (
-              <Link
-                key={item.id}
-                href="/announcements"
-                className={`p-3.5 rounded-xl border transition-all hover:shadow-xs block ${
-                  item.priority === "URGENT"
-                    ? "bg-red-50/40 border-red-200 hover:border-red-300"
-                    : item.priority === "IMPORTANT"
-                    ? "bg-amber-50/40 border-amber-200 hover:border-amber-300"
-                    : "bg-slate-50 border-slate-200 hover:border-slate-300"
-                }`}
-              >
-                <div className="flex items-center justify-between gap-1 mb-1">
-                  {item.priority === "URGENT" && (
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-100 text-red-700">Urgent</span>
-                  )}
-                  {item.priority === "IMPORTANT" && (
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">Important</span>
-                  )}
-                  {item.priority === "NORMAL" && (
-                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-teal-100 text-[#0d9488]">Notice</span>
-                  )}
-                  <span className="text-[10px] text-gray-400">{new Date(item.createdAt).toLocaleDateString()}</span>
-                </div>
-                <h3 className="text-xs font-bold text-gray-900 line-clamp-1">{item.title}</h3>
-                <p className="text-[11px] text-gray-600 line-clamp-2 mt-0.5">{item.content}</p>
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
-
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
         {/* Shop Status */}
         <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex flex-col justify-center items-start">
@@ -203,16 +154,6 @@ export default function RetailerDashboard() {
             </div>
             <h3 className="font-medium text-xs sm:text-sm text-[#ef4444]">Report Stolen</h3>
             <p className="text-[11px] text-gray-500 mt-0.5">Flag device</p>
-          </Link>
-
-          <Link href="/announcements" className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 flex flex-col items-center justify-center text-center group">
-            <div className="w-11 h-11 bg-purple-50 rounded-full flex items-center justify-center mb-2.5 group-hover:bg-purple-100 transition-colors">
-              <svg className="w-5 h-5 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
-              </svg>
-            </div>
-            <h3 className="font-medium text-xs sm:text-sm text-[#1e1b4b]">Announcements</h3>
-            <p className="text-[11px] text-gray-500 mt-0.5">Notices & alerts</p>
           </Link>
 
           <Link href="/retailer/profile" className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 flex flex-col items-center justify-center text-center group">

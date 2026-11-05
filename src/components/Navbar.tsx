@@ -58,7 +58,6 @@ export default function Navbar() {
     const unauthLinks = [
       { name: 'Check IMEI', path: '/check-imei' },
       { name: 'Find Retailers', path: '/retailers' },
-      { name: 'Announcements', path: '/announcements' },
     ];
 
     if (status === 'loading') return unauthLinks;
@@ -80,14 +79,12 @@ export default function Navbar() {
           { name: 'Users', path: '/admin/users' },
           { name: 'Retailers', path: '/admin/retailers' },
           { name: 'Stolen IMEIs', path: '/admin/stolen-imeis' },
-          { name: 'Announcements', path: '/admin/announcements' },
         ];
       case 'RETAILER':
         return [
           { name: 'Dashboard', path: '/retailer/dashboard' },
           { name: 'My Phones', path: '/retailer/phones' },
           { name: 'Report Stolen', path: '/retailer/report-stolen' },
-          { name: 'Announcements', path: '/announcements' },
           { name: 'Check IMEI', path: '/check-imei' },
         ];
       case 'USER':
@@ -95,7 +92,6 @@ export default function Navbar() {
         return [
           { name: 'Check IMEI', path: '/check-imei' },
           { name: 'Find Retailers', path: '/retailers' },
-          { name: 'Announcements', path: '/announcements' },
           { name: 'Dashboard', path: '/dashboard' },
           { name: 'Report Stolen', path: '/dashboard/report' },
         ];

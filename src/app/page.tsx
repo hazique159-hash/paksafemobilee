@@ -31,12 +31,6 @@ export default function HomePage() {
             >
               Find Retailers
             </Link>
-            <Link 
-              href="/announcements" 
-              className="inline-flex justify-center items-center px-8 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-medium transition-all duration-200 backdrop-blur-xs border border-white/20"
-            >
-              Announcements
-            </Link>
           </div>
         </div>
       </section>

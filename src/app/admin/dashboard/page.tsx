@@ -28,7 +28,7 @@ export default function AdminDashboard() {
     <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-8 animate-in fade-in zoom-in duration-300">
       <h1 className="text-2xl md:text-3xl font-bold text-[#1e1b4b]">Admin Dashboard</h1>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Total Users */}
         <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
           <div>
@@ -81,56 +81,9 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* Announcements */}
-        <div className="bg-white p-5 rounded-2xl shadow-sm border border-purple-100 flex items-center justify-between">
-          <div>
-            <p className="text-xs text-purple-600 font-medium">Announcements</p>
-            <p className="text-2xl sm:text-3xl font-bold text-purple-700 mt-1">{stats?.totalAnnouncements || 0}</p>
-          </div>
-          <div className="h-11 w-11 bg-purple-50 rounded-xl flex items-center justify-center text-purple-600">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
-            </svg>
-          </div>
-        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Recent Announcements */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-          <div className="p-5 border-b border-gray-100 flex justify-between items-center">
-            <h2 className="text-base font-bold text-[#1e1b4b]">Live Announcements</h2>
-            <Link href="/admin/announcements" className="text-xs font-semibold text-[#0d9488] hover:underline">Manage</Link>
-          </div>
-          <div className="p-0">
-            {stats?.recentAnnouncements?.map((item: any) => (
-              <div key={item.id} className="p-4 border-b border-gray-50 flex flex-col gap-1 last:border-0 hover:bg-gray-50 transition-colors">
-                <div className="flex items-center justify-between gap-2">
-                  <p className="font-semibold text-gray-900 text-sm truncate">{item.title}</p>
-                  {item.priority === "URGENT" && (
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-100 text-red-700">Urgent</span>
-                  )}
-                  {item.priority === "IMPORTANT" && (
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-orange-100 text-orange-700">Important</span>
-                  )}
-                </div>
-                <div className="flex items-center justify-between text-xs text-gray-400">
-                  <span>Audience: {item.target}</span>
-                  <span>{new Date(item.createdAt).toLocaleDateString()}</span>
-                </div>
-              </div>
-            ))}
-            {(!stats?.recentAnnouncements || stats.recentAnnouncements.length === 0) && (
-              <div className="p-6 text-center text-gray-500 text-sm">
-                No announcements yet.
-                <div className="mt-2">
-                  <Link href="/admin/announcements" className="text-xs text-[#0d9488] font-semibold hover:underline">Create One</Link>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Users */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
           <div className="p-5 border-b border-gray-100 flex justify-between items-center">

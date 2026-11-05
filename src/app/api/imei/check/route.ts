@@ -4,17 +4,23 @@ import { prisma } from "@/lib/prisma";
 
 export async function POST(request: Request) {
   try {
-    const { imei } = await request.json();
+    const body = await request.json();
+    const query = (body.query || body.imei || "").trim();
 
-    if (!imei || imei.length !== 15 || !/^\d+$/.test(imei)) {
+    if (!query) {
       return NextResponse.json(
-        { message: "Invalid IMEI format" },
+        { message: "Please enter a valid IMEI or Serial Number" },
         { status: 400 }
       );
     }
 
-    const stolenRecord = await prisma.stolenIMEI.findUnique({
-      where: { imei },
+    const stolenRecord = await prisma.stolenIMEI.findFirst({
+      where: {
+        OR: [
+          { imei: { equals: query, mode: "insensitive" } },
+          { serialNumber: { equals: query, mode: "insensitive" } },
+        ],
+      },
       include: {
         reportedBy: {
           select: {
@@ -29,12 +35,14 @@ export async function POST(request: Request) {
     if (stolenRecord) {
       return NextResponse.json({
         status: "STOLEN",
+        searchedQuery: query,
         record: stolenRecord,
       });
     }
 
     return NextResponse.json({
       status: "CLEAN",
+      searchedQuery: query,
     });
 
   } catch (error) {

@@ -15,7 +15,8 @@ export async function POST(req: Request) {
        return NextResponse.json({ error: 'Unauthorized role' }, { status: 403 });
     }
 
-    const { imei, brand, model, description } = await req.json();
+    const { imei, serialNumber, serial, brand, model, description } = await req.json();
+    const finalSerial = (serialNumber || serial || '').trim() || null;
 
     if (!imei || !brand || !model) {
       return NextResponse.json(
@@ -43,6 +44,22 @@ export async function POST(req: Request) {
       );
     }
 
+    // Check if Serial Number is already reported
+    if (finalSerial) {
+      const existingSerial = await prisma.stolenIMEI.findFirst({
+        where: {
+          serialNumber: { equals: finalSerial, mode: 'insensitive' },
+        },
+      });
+
+      if (existingSerial) {
+        return NextResponse.json(
+          { error: 'This Serial Number has already been reported as stolen' },
+          { status: 400 }
+        );
+      }
+    }
+
     // Fetch full user data from DB to get phone
     const dbUser = await prisma.user.findUnique({
       where: { id: session.user.id! },
@@ -53,6 +70,7 @@ export async function POST(req: Request) {
     const report = await prisma.stolenIMEI.create({
       data: {
         imei,
+        serialNumber: finalSerial,
         brand,
         model,
         description,

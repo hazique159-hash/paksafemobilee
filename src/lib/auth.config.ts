@@ -12,14 +12,15 @@ export const authConfig: NextAuthConfig = {
       const { pathname } = nextUrl;
 
       // Public routes
-      const publicRoutes = ["/", "/login", "/register", "/verify-otp", "/check-imei", "/retailers"];
+      const publicRoutes = ["/", "/login", "/register", "/verify-otp", "/check-imei", "/retailers", "/announcements"];
       const isPublicRoute = publicRoutes.some(
-        (route) => pathname === route || pathname.startsWith("/retailers/")
+        (route) => pathname === route || pathname.startsWith("/retailers/") || pathname.startsWith("/announcements/")
       );
       const isApiPublicRoute =
         pathname.startsWith("/api/auth") ||
         pathname.startsWith("/api/imei/check") ||
-        pathname.startsWith("/api/retailers");
+        pathname.startsWith("/api/retailers") ||
+        pathname.startsWith("/api/announcements");
 
       if (isPublicRoute || isApiPublicRoute) {
         return true;

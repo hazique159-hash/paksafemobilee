@@ -9,6 +9,7 @@ export default function ReportStolenPage() {
   
   const [formData, setFormData] = useState({
     imei: '',
+    serialNumber: '',
     brand: '',
     model: '',
     description: '',
@@ -52,7 +53,7 @@ export default function ReportStolenPage() {
       if (res.ok) {
         setStatus('success');
         setMessage(data.message || 'Report submitted successfully.');
-        setFormData({ imei: '', brand: '', model: '', description: '' });
+        setFormData({ imei: '', serialNumber: '', brand: '', model: '', description: '' });
       } else {
         setStatus('error');
         setMessage(data.error || 'Failed to submit report.');
@@ -135,6 +136,21 @@ export default function ReportStolenPage() {
               onChange={handleChange}
               className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-[#0d9488] focus:border-[#0d9488] outline-none transition-all text-base min-h-[44px]"
               placeholder="Enter 15-digit IMEI"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="serialNumber" className="block text-sm font-medium text-slate-700 mb-1.5">
+              Serial Number (Optional)
+            </label>
+            <input
+              type="text"
+              id="serialNumber"
+              name="serialNumber"
+              value={formData.serialNumber}
+              onChange={handleChange}
+              className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-[#0d9488] focus:border-[#0d9488] outline-none transition-all text-base min-h-[44px]"
+              placeholder="e.g. F17DN8V3G5MG (Found in Settings > About or original box)"
             />
           </div>
 

@@ -15,13 +15,18 @@ export async function GET() {
       totalRetailers,
       pendingRetailers,
       totalStolenIMEIs,
+      totalAnnouncements,
+      activeAnnouncements,
       recentUsers,
       recentReports,
+      recentAnnouncements,
     ] = await Promise.all([
       prisma.user.count({ where: { role: "USER" } }),
       prisma.user.count({ where: { role: "RETAILER" } }),
       prisma.user.count({ where: { role: "RETAILER", isApproved: false } }),
       prisma.stolenIMEI.count(),
+      prisma.announcement.count(),
+      prisma.announcement.count({ where: { isActive: true } }),
       prisma.user.findMany({
         where: { role: "USER" },
         orderBy: { createdAt: "desc" },
@@ -33,6 +38,11 @@ export async function GET() {
         take: 5,
         select: { id: true, imei: true, brand: true, model: true, createdAt: true },
       }),
+      prisma.announcement.findMany({
+        orderBy: { createdAt: "desc" },
+        take: 4,
+        select: { id: true, title: true, priority: true, target: true, isPinned: true, isActive: true, createdAt: true },
+      }),
     ]);
 
     return NextResponse.json({
@@ -40,8 +50,11 @@ export async function GET() {
       totalRetailers,
       pendingRetailers,
       totalStolenIMEIs,
+      totalAnnouncements,
+      activeAnnouncements,
       recentUsers,
       recentReports,
+      recentAnnouncements,
     });
   } catch (error) {
     console.error("Admin stats error:", error);

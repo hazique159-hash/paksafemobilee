@@ -6,6 +6,7 @@ import Link from 'next/link';
 type Report = {
   id: string;
   imei: string;
+  serialNumber?: string | null;
   brand: string;
   model: string;
   description: string | null;
@@ -103,10 +104,15 @@ export default function MyReportsPage() {
             <div key={report.id} className="bg-white rounded-2xl shadow-sm p-5 sm:p-6 hover:shadow-md transition-shadow">
               <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                 <div>
-                  <div className="flex items-center gap-3 mb-2">
+                  <div className="flex items-center gap-3 mb-2 flex-wrap">
                     <h3 className="text-lg font-bold text-navy-900">
                       IMEI: {report.imei}
                     </h3>
+                    {report.serialNumber && (
+                      <span className="text-sm font-semibold text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-lg">
+                        Serial: {report.serialNumber}
+                      </span>
+                    )}
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
                       Reported Stolen
                     </span>

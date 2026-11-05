@@ -31,6 +31,12 @@ export default function HomePage() {
             >
               Find Retailers
             </Link>
+            <Link 
+              href="/announcements" 
+              className="inline-flex justify-center items-center px-8 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-medium transition-all duration-200 backdrop-blur-xs border border-white/20"
+            >
+              Announcements
+            </Link>
           </div>
         </div>
       </section>
@@ -43,38 +49,49 @@ export default function HomePage() {
             <p className="mt-4 text-slate-600">Comprehensive protection for your mobile devices.</p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Feature 1 */}
-            <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-all duration-200">
-              <div className="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center mb-6 text-indigo-600">
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-all duration-200">
+              <div className="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center mb-5 text-indigo-600">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-slate-900 mb-3">IMEI Verification</h3>
-              <p className="text-slate-600">Instantly check if a device has been reported stolen before you buy it.</p>
+              <h3 className="text-lg font-semibold text-slate-900 mb-2">IMEI Verification</h3>
+              <p className="text-sm text-slate-600">Instantly check if a device has been reported stolen before you buy it.</p>
             </div>
 
             {/* Feature 2 */}
-            <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-all duration-200">
-              <div className="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center mb-6 text-red-500">
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-all duration-200">
+              <div className="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center mb-5 text-red-500">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-slate-900 mb-3">Report Stolen Phone</h3>
-              <p className="text-slate-600">Register your stolen device's IMEI to prevent unauthorized resale.</p>
+              <h3 className="text-lg font-semibold text-slate-900 mb-2">Report Stolen Phone</h3>
+              <p className="text-sm text-slate-600">Register your stolen device's IMEI to prevent unauthorized resale.</p>
             </div>
 
             {/* Feature 3 */}
-            <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-all duration-200">
-              <div className="w-12 h-12 bg-teal-50 rounded-xl flex items-center justify-center mb-6 text-teal-600">
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-all duration-200">
+              <div className="w-12 h-12 bg-teal-50 rounded-xl flex items-center justify-center mb-5 text-teal-600">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-slate-900 mb-3">Verified Retailers</h3>
-              <p className="text-slate-600">Find trusted mobile retailers near you for safe and secure purchases.</p>
+              <h3 className="text-lg font-semibold text-slate-900 mb-2">Verified Retailers</h3>
+              <p className="text-sm text-slate-600">Find trusted mobile retailers near you for safe and secure purchases.</p>
+            </div>
+
+            {/* Feature 4 */}
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-all duration-200">
+              <div className="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center mb-5 text-purple-600">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-slate-900 mb-2">Official Notices</h3>
+              <p className="text-sm text-slate-600">Real-time alerts, policy changes, and security announcements for all.</p>
             </div>
           </div>
         </div>

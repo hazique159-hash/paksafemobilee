@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 export default function CheckIMEIPage() {
-  const [imei, setImei] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
   const [error, setError] = useState("");
@@ -13,8 +13,14 @@ export default function CheckIMEIPage() {
     setError("");
     setResult(null);
 
-    if (!imei || imei.length !== 15 || !/^\d+$/.test(imei)) {
-      setError("Please enter a valid 15-digit IMEI number.");
+    const query = searchQuery.trim();
+    if (!query) {
+      setError("Please enter an IMEI number or Serial Number.");
+      return;
+    }
+
+    if (query.length < 3) {
+      setError("Please enter a valid IMEI or Serial Number.");
       return;
     }
 
@@ -23,12 +29,12 @@ export default function CheckIMEIPage() {
       const res = await fetch("/api/imei/check", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ imei }),
+        body: JSON.stringify({ query }),
       });
       
       const data = await res.json();
       if (!res.ok) {
-        setError(data.message || "Failed to check IMEI");
+        setError(data.message || "Failed to check status");
       } else {
         setResult(data);
       }
@@ -50,7 +56,7 @@ export default function CheckIMEIPage() {
             </svg>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-[#1e1b4b] tracking-tight">
-            IMEI Verification Portal
+            IMEI & Serial Verification Portal
           </h1>
           <p className="mt-2 text-slate-600 text-sm max-w-xs mx-auto">
             Search an IMEI or serial number to check whether the device has been reported stolen or lost.
@@ -63,19 +69,17 @@ export default function CheckIMEIPage() {
             <div>
               <input
                 type="text"
-                id="imei"
-                inputMode="numeric"
-                maxLength={15}
-                value={imei}
-                onChange={(e) => setImei(e.target.value.replace(/\D/g, "").slice(0, 15))}
-                placeholder="Enter 15-digit IMEI"
-                className="w-full px-4 py-3.5 rounded-2xl border-2 border-[#1e1b4b]/80 focus:ring-4 focus:ring-[#1e1b4b]/10 focus:border-[#1e1b4b] outline-none transition-all text-center text-lg font-bold text-[#1e1b4b] tracking-widest min-h-[52px]"
+                id="searchQuery"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Enter 15-digit IMEI or Serial Number"
+                className="w-full px-4 py-3.5 rounded-2xl border-2 border-[#1e1b4b]/80 focus:ring-4 focus:ring-[#1e1b4b]/10 focus:border-[#1e1b4b] outline-none transition-all text-center text-lg font-bold text-[#1e1b4b] tracking-wider min-h-[52px] uppercase placeholder:normal-case placeholder:font-normal placeholder:text-base placeholder:tracking-normal"
               />
             </div>
 
             <button
               type="submit"
-              disabled={loading || imei.length !== 15}
+              disabled={loading || !searchQuery.trim()}
               className="w-full py-3.5 px-4 rounded-2xl font-bold text-white bg-[#1e1b4b] hover:bg-[#312e81] focus:outline-none focus:ring-4 focus:ring-[#1e1b4b]/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 min-h-[48px] shadow-md active:scale-[0.99] cursor-pointer flex justify-center items-center text-base"
             >
               {loading ? (
@@ -101,7 +105,7 @@ export default function CheckIMEIPage() {
               <svg className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <span>To find your IMEI, dial <strong className="text-slate-700">*#06#</strong> on your mobile device. For dual-SIM phones, check IMEI 1.</span>
+              <span>To find your IMEI, dial <strong className="text-slate-700">*#06#</strong> on your phone. You can also search by Serial Number found in Settings &gt; About or on the original box.</span>
             </div>
           </form>
         </div>
@@ -119,9 +123,9 @@ export default function CheckIMEIPage() {
                   </svg>
                 </div>
                 <h3 className="text-xl font-extrabold text-emerald-600 mb-1">STATUS: CLEAN</h3>
-                <p className="text-xs text-slate-500 mb-4 font-medium tracking-wide">Search: {imei}</p>
+                <p className="text-xs text-slate-500 mb-4 font-medium tracking-wide">Search: {result.searchedQuery || searchQuery}</p>
                 <div className="bg-emerald-50 text-emerald-800 p-4 rounded-2xl text-sm font-medium mb-6">
-                  This IMEI has not been reported stolen or lost.
+                  This device has not been reported stolen or lost.
                 </div>
                 <button 
                   onClick={() => setResult(null)}
@@ -142,7 +146,7 @@ export default function CheckIMEIPage() {
                     </div>
                     <div>
                       <h3 className="text-lg font-black text-rose-600 tracking-tight">STATUS: STOLEN</h3>
-                      <p className="text-xs text-slate-500 font-semibold">Search: {result.record.imei}</p>
+                      <p className="text-xs text-slate-500 font-semibold">Search: {result.searchedQuery || searchQuery}</p>
                     </div>
                   </div>
                   <button 
@@ -158,7 +162,7 @@ export default function CheckIMEIPage() {
                 {/* Warning message card */}
                 <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 space-y-2.5 text-xs text-slate-700 mb-5">
                   <p className="font-extrabold text-slate-900 text-sm pb-1 border-b border-slate-200">
-                    WARNING: This IMEI is reported as stolen
+                    WARNING: This device is reported as stolen
                   </p>
                   <div className="flex justify-between">
                     <span className="font-bold text-slate-600">Brand:</span>
@@ -168,6 +172,16 @@ export default function CheckIMEIPage() {
                     <span className="font-bold text-slate-600">Model:</span>
                     <span className="font-semibold text-slate-900">{result.record.model}</span>
                   </div>
+                  <div className="flex justify-between">
+                    <span className="font-bold text-slate-600">IMEI:</span>
+                    <span className="font-semibold font-mono text-slate-900">{result.record.imei}</span>
+                  </div>
+                  {result.record.serialNumber && (
+                    <div className="flex justify-between">
+                      <span className="font-bold text-slate-600">Serial No:</span>
+                      <span className="font-semibold font-mono text-slate-900">{result.record.serialNumber}</span>
+                    </div>
+                  )}
                   {result.record.reportedBy?.name && (
                     <div className="flex justify-between">
                       <span className="font-bold text-slate-600">Reported By:</span>

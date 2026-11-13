@@ -13,6 +13,7 @@ export default function ReportStolenPage() {
     brand: '',
     model: '',
     description: '',
+    location: '',
   });
   
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -53,7 +54,7 @@ export default function ReportStolenPage() {
       if (res.ok) {
         setStatus('success');
         setMessage(data.message || 'Report submitted successfully.');
-        setFormData({ imei: '', serialNumber: '', brand: '', model: '', description: '' });
+        setFormData({ imei: '', serialNumber: '', brand: '', model: '', description: '', location: '' });
       } else {
         setStatus('error');
         setMessage(data.error || 'Failed to submit report.');
@@ -200,6 +201,21 @@ export default function ReportStolenPage() {
               className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-[#0d9488] focus:border-[#0d9488] outline-none transition-all resize-none text-base"
               placeholder="Any details about the theft or distinguishing features..."
             ></textarea>
+          </div>
+
+          <div>
+            <label htmlFor="location" className="block text-sm font-medium text-slate-700 mb-1.5">
+              Location (Optional)
+            </label>
+            <input
+              type="text"
+              id="location"
+              name="location"
+              value={formData.location}
+              onChange={handleChange}
+              className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-[#0d9488] focus:border-[#0d9488] outline-none transition-all text-base min-h-[44px]"
+              placeholder="Where was it lost or stolen? e.g. Saddar, Karachi"
+            />
           </div>
 
           <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">

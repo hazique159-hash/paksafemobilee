@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { PAKISTAN_CITIES } from "@/lib/cities";
 
 type Retailer = {
   id: string;
@@ -17,28 +18,54 @@ type Retailer = {
   };
 };
 
+type PhoneResult = {
+  id: string;
+  brand: string;
+  model: string;
+  price: number;
+  color: string | null;
+  condition: string;
+  ramStorage: string | null;
+  image: string | null;
+  retailer: {
+    id: string;
+    shopName: string | null;
+    name: string;
+    city: string | null;
+    shopAddress: string | null;
+  };
+};
+
+type Mode = "shops" | "phones";
+
 export default function RetailersPage() {
+  const [mode, setMode] = useState<Mode>("shops");
   const [retailers, setRetailers] = useState<Retailer[]>([]);
+  const [phones, setPhones] = useState<PhoneResult[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [city, setCity] = useState("");
 
-  const cities = ["Karachi", "Lahore", "Islamabad", "Rawalpindi", "Faisalabad", "Multan", "Peshawar", "Quetta", "Hyderabad", "Sialkot"];
-
-  const fetchRetailers = async () => {
+  const fetchData = async () => {
     setLoading(true);
     try {
       const params = new URLSearchParams();
       if (search) params.append("search", search);
       if (city) params.append("city", city);
-      
-      const res = await fetch(`/api/retailers?${params.toString()}`);
+
+      const endpoint =
+        mode === "phones" ? "/api/retailers/phones" : "/api/retailers";
+      const res = await fetch(`${endpoint}?${params.toString()}`);
       const data = await res.json();
       if (res.ok) {
-        setRetailers(data.retailers || []);
+        if (mode === "phones") {
+          setPhones(data.phones || []);
+        } else {
+          setRetailers(data.retailers || []);
+        }
       }
     } catch (error) {
-      console.error("Error fetching retailers:", error);
+      console.error("Error fetching data:", error);
     } finally {
       setLoading(false);
     }
@@ -46,10 +73,19 @@ export default function RetailersPage() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      fetchRetailers();
+      fetchData();
     }, 300);
     return () => clearTimeout(timer);
-  }, [search, city]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search, city, mode]);
+
+  const formatPrice = (value: number) => {
+    try {
+      return value.toLocaleString("en-PK", { maximumFractionDigits: 0 });
+    } catch {
+      return String(value);
+    }
+  };
 
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
@@ -60,22 +96,52 @@ export default function RetailersPage() {
             Verified Retailers
           </h1>
           <p className="text-slate-500 text-sm mt-1">
-            Browse verified mobile shops and available devices.
+            Browse verified mobile shops and search available devices.
           </p>
         </div>
 
-        {/* Search and Filters Matching UI screenshot */}
+        {/* Search and Filters */}
         <div className="bg-white p-4 sm:p-6 rounded-3xl shadow-sm border border-slate-200 space-y-3">
+          {/* Mode toggle */}
+          <div className="grid grid-cols-2 gap-1.5 p-1.5 bg-slate-100 rounded-2xl">
+            <button
+              type="button"
+              onClick={() => setMode("shops")}
+              className={`py-2.5 rounded-xl text-sm font-bold transition-colors ${
+                mode === "shops"
+                  ? "bg-white text-[#1e1b4b] shadow-sm"
+                  : "text-slate-500 hover:text-slate-700"
+              }`}
+            >
+              Shops
+            </button>
+            <button
+              type="button"
+              onClick={() => setMode("phones")}
+              className={`py-2.5 rounded-xl text-sm font-bold transition-colors ${
+                mode === "phones"
+                  ? "bg-white text-[#1e1b4b] shadow-sm"
+                  : "text-slate-500 hover:text-slate-700"
+              }`}
+            >
+              Phones
+            </button>
+          </div>
+
           <div>
             <input
               type="text"
-              placeholder="Search shop name..."
+              placeholder={
+                mode === "phones"
+                  ? "Search a phone, e.g. Galaxy S22"
+                  : "Search shop name..."
+              }
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full px-4 py-3.5 rounded-2xl border border-slate-300 focus:ring-2 focus:ring-[#0d9488] focus:border-[#0d9488] outline-none text-slate-800 text-base"
             />
           </div>
-          
+
           <div className="relative">
             <select
               value={city}
@@ -83,8 +149,10 @@ export default function RetailersPage() {
               className="w-full px-4 py-3.5 rounded-2xl border border-slate-300 focus:ring-2 focus:ring-[#0d9488] focus:border-[#0d9488] outline-none bg-white text-slate-700 text-base appearance-none cursor-pointer"
             >
               <option value="">All Cities</option>
-              {cities.map((c) => (
-                <option key={c} value={c}>{c}</option>
+              {PAKISTAN_CITIES.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
               ))}
             </select>
             <div className="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-slate-400">
@@ -99,14 +167,113 @@ export default function RetailersPage() {
         {loading ? (
           <div className="space-y-4">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-white rounded-3xl shadow-sm border border-slate-200 p-5 animate-pulse space-y-4">
+              <div
+                key={i}
+                className="bg-white rounded-3xl shadow-sm border border-slate-200 p-5 animate-pulse space-y-4"
+              >
                 <div className="h-44 bg-slate-200 rounded-2xl"></div>
                 <div className="h-6 bg-slate-200 rounded w-1/3"></div>
                 <div className="h-4 bg-slate-200 rounded w-2/3"></div>
               </div>
             ))}
           </div>
-        ) : retailers.length > 0 ? (
+        ) : mode === "phones" ? (
+          /* ---------- PHONE SEARCH RESULTS ---------- */
+          phones.length > 0 ? (
+            <div className="space-y-4">
+              {phones.map((phone) => (
+                <div
+                  key={phone.id}
+                  className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-all duration-200"
+                >
+                  <div className="flex gap-4 p-4 sm:p-5">
+                    {/* Phone image / placeholder */}
+                    <div className="w-24 h-24 sm:w-28 sm:h-28 shrink-0 rounded-2xl bg-slate-100 flex items-center justify-center overflow-hidden">
+                      {phone.image ? (
+                        <img
+                          src={phone.image}
+                          alt={`${phone.brand} ${phone.model}`}
+                          className="max-h-full max-w-full object-contain"
+                        />
+                      ) : (
+                        <svg className="w-10 h-10 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                        </svg>
+                      )}
+                    </div>
+
+                    {/* Info */}
+                    <div className="flex-1 min-w-0 flex flex-col gap-2">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0">
+                          <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                            {phone.brand}
+                          </p>
+                          <h3 className="text-base sm:text-lg font-extrabold text-[#1e1b4b] truncate">
+                            {phone.model}
+                          </h3>
+                        </div>
+                        <div className="text-sm sm:text-base font-black text-[#0d9488] whitespace-nowrap">
+                          Rs. {formatPrice(phone.price)}
+                        </div>
+                      </div>
+
+                      {/* Spec chips */}
+                      <div className="flex flex-wrap gap-1.5">
+                        {phone.ramStorage && (
+                          <span className="text-[11px] font-semibold px-2 py-0.5 rounded-lg bg-slate-100 text-slate-600">
+                            {phone.ramStorage}
+                          </span>
+                        )}
+                        {phone.condition && (
+                          <span className="text-[11px] font-semibold px-2 py-0.5 rounded-lg bg-slate-100 text-slate-600">
+                            {phone.condition}
+                          </span>
+                        )}
+                        {phone.color && (
+                          <span className="text-[11px] font-semibold px-2 py-0.5 rounded-lg bg-slate-100 text-slate-600 capitalize">
+                            {phone.color}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Retailer + View Shop */}
+                      <div className="flex items-end justify-between gap-2 pt-1 mt-auto">
+                        <div className="min-w-0">
+                          <p className="text-xs text-slate-500">Available at</p>
+                          <p className="text-sm font-bold text-slate-800 truncate">
+                            {phone.retailer.shopName || phone.retailer.name}
+                            {phone.retailer.city ? (
+                              <span className="font-medium text-slate-500"> · {phone.retailer.city}</span>
+                            ) : null}
+                          </p>
+                        </div>
+                        <Link
+                          href={`/retailers/${phone.retailer.id}`}
+                          className="shrink-0 inline-flex items-center gap-1 text-xs sm:text-sm font-bold text-white bg-[#1e1b4b] hover:bg-[#312e81] px-3.5 py-2 rounded-xl transition-colors"
+                        >
+                          <span>View Shop</span>
+                          <span>&rarr;</span>
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-16 bg-white rounded-3xl shadow-sm border border-slate-200">
+              <svg className="mx-auto h-12 w-12 text-slate-300 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+              </svg>
+              <h3 className="text-base font-bold text-slate-800">No phones found</h3>
+              <p className="mt-1 text-xs text-slate-500">
+                Try a different model name or city.
+              </p>
+            </div>
+          )
+        ) : /* ---------- SHOP RESULTS ---------- */
+        retailers.length > 0 ? (
           <div className="space-y-6">
             {retailers.map((retailer) => (
               <div
@@ -139,7 +306,7 @@ export default function RetailersPage() {
                   </div>
                 </div>
 
-                {/* Card Info Matching xx.jpeg */}
+                {/* Card Info */}
                 <div className="p-5 sm:p-6 space-y-3">
                   <h3 className="text-xl font-extrabold text-[#1e1b4b]">
                     {retailer.shopName || retailer.name}

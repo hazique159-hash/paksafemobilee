@@ -5,6 +5,7 @@ import { Providers } from './providers';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ServiceWorkerRegister from '@/components/ServiceWorkerRegister';
+import PageTransition from '@/components/PageTransition';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -39,7 +40,7 @@ export default function RootLayout({
           <ServiceWorkerRegister />
           <Navbar />
           <main className="flex-grow">
-            {children}
+            <PageTransition>{children}</PageTransition>
           </main>
           <Footer />
         </Providers>

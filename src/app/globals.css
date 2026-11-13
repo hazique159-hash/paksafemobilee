@@ -9,19 +9,55 @@
   --color-danger: #ef4444;
 }
 
+:root {
+  /* iOS-like smooth and spring easings */
+  --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
   }
-  
+
   body {
     @apply bg-slate-50 text-slate-900;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Smoother, more tactile feel on interactive elements */
+  a,
+  button {
+    transition-property: color, background-color, border-color, box-shadow, transform, opacity;
+    transition-duration: 200ms;
+    transition-timing-function: var(--ease-smooth);
+  }
+
+  /* Gentle press feedback, like native app controls */
+  button:not(:disabled):active {
+    transform: scale(0.97);
   }
 }
 
 @layer utilities {
   .animate-slide-in-right {
     animation: slideInRight 0.3s ease-out forwards;
+  }
+
+  /* Page/route entrance — soft fade + lift */
+  .animate-page-in {
+    animation: pageIn 0.42s var(--ease-smooth) both;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-out both;
+  }
+
+  .animate-rise {
+    animation: rise 0.5s var(--ease-smooth) both;
   }
 }
 
@@ -33,6 +69,45 @@
   to {
     opacity: 1;
     transform: translateX(0);
+  }
+}
+
+@keyframes pageIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 

@@ -62,7 +62,6 @@ model StolenIMEI {
   brand         String
   model         String
   description   String?
-  location      String?
   reporterPhone String
   reporterEmail String
   reportDate    DateTime @default(now())

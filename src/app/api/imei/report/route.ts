@@ -15,9 +15,8 @@ export async function POST(req: Request) {
        return NextResponse.json({ error: 'Unauthorized role' }, { status: 403 });
     }
 
-    const { imei, serialNumber, serial, brand, model, description, location } = await req.json();
+    const { imei, serialNumber, serial, brand, model, description } = await req.json();
     const finalSerial = (serialNumber || serial || '').trim() || null;
-    const finalLocation = (location || '').trim() || null;
 
     if (!imei || !brand || !model) {
       return NextResponse.json(
@@ -75,7 +74,6 @@ export async function POST(req: Request) {
         brand,
         model,
         description,
-        location: finalLocation,
         reporterPhone: dbUser?.phone || '',
         reporterEmail: dbUser?.email || session.user.email || '',
         reportedById: session.user.id!,

@@ -12,6 +12,7 @@ function VerifyOtpContent() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [showPendingModal, setShowPendingModal] = useState(false);
   const [countdown, setCountdown] = useState(60);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
@@ -71,8 +72,7 @@ function VerifyOtpContent() {
       }
 
       if (data.role === 'RETAILER') {
-        setSuccessMsg('Email verified! Your account is pending admin approval. You will be notified once approved.');
-        setTimeout(() => router.push('/login'), 5000);
+        setShowPendingModal(true);
       } else {
         setSuccessMsg('Email verified successfully! Redirecting to login...');
         setTimeout(() => router.push('/login'), 2000);
@@ -106,6 +106,28 @@ function VerifyOtpContent() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#f8fafc] px-4 py-8">
+      {showPendingModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-sm text-center shadow-lg">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-amber-100 mb-4">
+              <svg className="h-8 w-8 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">Email Verified</h3>
+            <p className="text-gray-600 mb-6">
+              Please wait till the admin verifies your account. You&apos;ll be able to log in once your account has been approved.
+            </p>
+            <button
+              onClick={() => router.push('/login')}
+              className="w-full bg-[#1e1b4b] text-white py-3 rounded-xl font-medium hover:bg-[#312e81] transition-all duration-200 min-h-[44px]"
+            >
+              Go to Login
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="w-full max-w-md bg-white rounded-2xl shadow-sm p-8 text-center">
         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-teal-100 mb-6">
           <svg className="h-8 w-8 text-[#0d9488]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -143,14 +165,14 @@ function VerifyOtpContent() {
               onChange={(e) => handleChange(index, e.target.value)}
               onKeyDown={(e) => handleKeyDown(index, e)}
               className="flex-1 min-w-0 w-full h-12 sm:h-14 text-center text-xl font-bold rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#0d9488] focus:border-[#0d9488] outline-none transition-all duration-200"
-              disabled={loading || !!successMsg}
+              disabled={loading || !!successMsg || showPendingModal}
             />
           ))}
         </div>
 
         <button
           onClick={() => handleVerify(otp.join(''))}
-          disabled={loading || otp.join('').length !== 6 || !!successMsg}
+          disabled={loading || otp.join('').length !== 6 || !!successMsg || showPendingModal}
           className="w-full bg-[#1e1b4b] text-white py-3 rounded-xl font-medium hover:bg-[#312e81] focus:ring-4 focus:ring-[#1e1b4b]/20 disabled:opacity-70 transition-all duration-200 flex justify-center items-center min-h-[44px] mb-6"
         >
           {loading ? (
@@ -167,7 +189,7 @@ function VerifyOtpContent() {
           Didn't receive the code?{' '}
           <button
             onClick={handleResend}
-            disabled={countdown > 0 || loading || !!successMsg}
+            disabled={countdown > 0 || loading || !!successMsg || showPendingModal}
             className="font-medium text-[#0d9488] hover:text-[#14b8a6] disabled:text-gray-400 transition-colors"
           >
             {countdown > 0 ? `Resend in ${countdown}s` : 'Resend Code'}

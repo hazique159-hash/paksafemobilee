@@ -142,6 +142,12 @@ export default function LoginPage() {
             />
           </div>
 
+          <div className="text-right -mt-2">
+            <Link href="/reset-password" className="text-sm font-medium text-[#0d9488] hover:text-[#14b8a6] transition-colors">
+              Forgot Password?
+            </Link>
+          </div>
+
           <button
             type="submit"
             disabled={loading}
